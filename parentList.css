@@ -1,0 +1,21 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+#parentList{
+	position: fixed;
+	background-color: #ccc;
+	width: 100px;
+	border: 1px solid #777;
+}
+.parent-node{
+	background-color: #eee;
+	border: 1px solid #777;
+	padding: 10px 20px;
+}
+.parent-node:hover{
+	background-color: #ccc;
+}
+.selected{
+	border: 1px dashed #777;
+}
