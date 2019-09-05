@@ -1,6 +1,5 @@
 import constants from './constants.js';
-
-let mainEl = document.getElementById(constants.generalId);
+import server from './server.js';
 
 export default class iElement {
 	constructor(el) {
@@ -9,7 +8,8 @@ export default class iElement {
 		this.elStyles = this.el.getBoundingClientRect();
 		this.isDrug = false;
 		this.isPositioned = false;
-		el.classList.add("target");
+		this.addId();
+		this.el.classList.add("target");
 		this.addListeners();
 	}
 
@@ -17,10 +17,27 @@ export default class iElement {
 		this.className = name;
 	}
 
-	addClass(name) {
-		this.className = name;
+	addId() {
+		if(!this.el.id){
+			this.el.id = (this.toCamelCase(this.el.classList[0]) || this.el.tagName.toLocaleLowerCase()) + ++constants.elementsCount;
+		}
+		this.updateElData();
 	}
+	updateElData() {
+		if(!constants.elData[this.el.id]){
+			constants.elData[this.el.id] = {
+				styles: {}
+			};
+		}
 
+		[].forEach.call(arguments, (property)=>{
+			constants.elData[this.el.id].styles[property] = this.el.style[property]
+		});
+		if(arguments.length > 0){
+			console.log("updateElData", constants.elData[this.el.id]);
+			server.sendData(constants.elData);
+		}
+	}
 	removeClass(name) {
 		this.className = name;
 	}
@@ -46,6 +63,7 @@ export default class iElement {
 		this.el.style.top = `${ this.elComputedStyleTop + this.diffY }px`;
 		this.el.style.left = `${ this.elComputedStyleLeft + this.diffX }px`;
 		this.isPositioned = true;
+		this.updateElData("position", "top", "left");
 	}
 
 	removeListeners() {
@@ -53,6 +71,7 @@ export default class iElement {
 		this.el.onmousedown = null;
 		this.el.onmousemove = null;
 		this.el.onmouseup = null;
+		this.el.classList.remove("target");
 	}
 	addListeners() {
 		this.el.onmousedown = (e)=>{
@@ -84,5 +103,11 @@ export default class iElement {
 			}
 		}
 	}
+	toCamelCase(text) {
+		return text.replace(/^([A-Z])|[\s-_](\w)/g, function(match, p1, p2, offset) {
+			if (p2) return p2.toUpperCase();
+			return p1.toLowerCase();
+		});
+	};
 }
 

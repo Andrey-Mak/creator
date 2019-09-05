@@ -1,4 +1,6 @@
 export default {
 		generalId: "creator",
-		parentListId: "parentList"
+		parentListId: "parentList",
+		elementsCount: 0,
+		elData: {}
 	}
