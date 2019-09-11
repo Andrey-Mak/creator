@@ -1,5 +1,7 @@
 import constants from './constants.js';
-import ParentList from './contextTable.js';
+import ParentsList from './parentsList.js';
+import DOMTree from './DOMTree.js';
+import DOMData from './DOMData.js';
 import iEl from './iElement.js';
 import server from './server.js';
 
@@ -9,8 +11,9 @@ try{
 	let targetEl;
 	server.connection();
 	server.onopen();
+	DOMData.init(mainEl);
 	mainEl.addEventListener("dblclick", (e)=>{
-		console.log(e);
+		let tree = new DOMTree();
 		if(parentLists.length > 0){
 			parentLists[0].destroy();
 			parentLists = [];
@@ -18,7 +21,7 @@ try{
 		if(targetEl){
 			targetEl.removeListeners();
 		}
-		let parentList = new ParentList(e.path, e.x, e.y);
+		let parentList = new ParentsList(e.path, e.x, e.y);
 		parentLists.push(parentList);
 	});
 	mainEl.addEventListener("selectEl", (e)=>{

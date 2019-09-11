@@ -1,4 +1,5 @@
 import constants from './constants.js';
+import DOMData from './DOMData.js';
 import server from './server.js';
 
 export default class iElement {
@@ -21,17 +22,11 @@ export default class iElement {
 		if(!this.el.id){
 			this.el.id = (this.toCamelCase(this.el.classList[0]) || this.el.tagName.toLocaleLowerCase()) + ++constants.elementsCount;
 		}
-		this.updateElData();
 	}
 	updateElData() {
-		if(!constants.elData[this.el.id]){
-			constants.elData[this.el.id] = {
-				styles: {}
-			};
-		}
-
 		[].forEach.call(arguments, (property)=>{
-			constants.elData[this.el.id].styles[property] = this.el.style[property]
+			DOMData.addStyle(this.el, property, this.el.style[property]);
+	//		constants.elData[this.el.id].styles[property] = this.el.style[property]
 		});
 		if(arguments.length > 0){
 			console.log("updateElData", constants.elData[this.el.id]);
