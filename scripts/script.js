@@ -12,8 +12,9 @@ try{
 	server.connection();
 	server.onopen();
 	DOMData.init(mainEl);
+	let tree = new DOMTree();
+
 	mainEl.addEventListener("dblclick", (e)=>{
-		let tree = new DOMTree();
 		if(parentLists.length > 0){
 			parentLists[0].destroy();
 			parentLists = [];
@@ -25,6 +26,10 @@ try{
 		parentLists.push(parentList);
 	});
 	mainEl.addEventListener("selectEl", (e)=>{
+		console.log(e);
+		if(targetEl){
+			targetEl.removeListeners();
+		}
 		targetEl = new iEl(e.detail.el);
 	});
 }catch (err){

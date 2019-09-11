@@ -4,13 +4,14 @@ import server from './server.js';
 
 export default class iElement {
 	constructor(el) {
-		console.log("iElement", el);
 		this.el = el;
+		this.node_el = document.querySelector(`#node_${this.el.id}`);
 		this.elStyles = this.el.getBoundingClientRect();
 		this.isDrug = false;
 		this.isPositioned = false;
 		this.addId();
 		this.el.classList.add("target");
+		this.node_el.classList.add("active");
 		this.addListeners();
 	}
 
@@ -64,14 +65,14 @@ export default class iElement {
 	removeListeners() {
 		console.log("removed", this.el);
 		this.el.onmousedown = null;
-		this.el.onmousemove = null;
+		document.onmousemove = null;
 		this.el.onmouseup = null;
 		this.el.classList.remove("target");
+		this.node_el.classList.remove("active");
 	}
 	addListeners() {
 		this.el.onmousedown = (e)=>{
 			e.stopPropagation();
-			console.log("onmousedown");
 			this.elComputedStyle = getComputedStyle(this.el);
 			this.elComputedStyleTop = parseInt(this.elComputedStyle.top);
 			this.elComputedStyleLeft = parseInt(this.elComputedStyle.left);
@@ -82,15 +83,13 @@ export default class iElement {
 
 			this.isDrug = true;
 		};
-		this.el.onmousemove = (e)=>{
-			console.log("onmousemove");
+		document.onmousemove = (e)=>{
 			if(this.isDrug){
 				this.updatePosition(e);
 				this.isPositioned = false;
 			}
 		};
 		this.el.onmouseup = (e)=>{
-			console.log("onmouseup");
 			e.stopPropagation();
 			this.isDrug = false;
 			if(!this.isPositioned) {

@@ -13,7 +13,6 @@ function createChildrensList(el, target){
 	if (children && children.length > 0) {
 		target.childrens = {};
 		children.forEach((child) => {
-			console.log("li: ", child);
 			target.childrens[child.id] = {};
 			createChildrensList(child, target.childrens[child.id]);
 		});
@@ -28,8 +27,6 @@ function findElObj(el, position = constants.elData[constants.generalId].children
 			if(keys[i] !== el.id && position[keys[i]].childrens){
 				findElObj(el, position[keys[i]].childrens, path + keys[i] + "/")
 			}else if(keys[i] === el.id){
-				console.log("path", path);
-				console.log("position[el.id]", position);
 				currentObj = position[keys[i]];
 				currentEl = currentObj;
 				break
@@ -47,7 +44,6 @@ export default {
 	addStyle: (el, property, value)=> {
 		currentEl = false;
 		findElObj(el);
-		console.log("currentEl", currentEl);
 		if(currentEl && !currentEl.styles){
 			currentEl.styles = {};
 		}

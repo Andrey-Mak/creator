@@ -30,3 +30,29 @@
 	background-color: #eee;
 	padding: 20px;
 }
+#DOMTree > ul{
+	padding-left: 0.5em;
+}
+#DOMTree li ul{
+	display: none;
+}
+#DOMTree .child-el{
+	font-size: 1em;
+	padding: 0.2em 0.5em;
+	color: #777;
+}
+#DOMTree .child-el.active,
+#DOMTree .child-el:hover{
+	font-size: 1.1em;
+	color: #000;
+}
+#DOMTree .child-el.active ul,
+#DOMTree .child-el:hover ul{
+	display: block;
+}
+.over{
+	box-shadow: 0 0 0.1em rgba(100,0,0,0.5);
+}
+.target{
+	z-index: 100;
+}
