@@ -47,8 +47,10 @@ export default class ParentList {
 		let fragment = document.createDocumentFragment();
 		console.log(this.parrents);
 		this.parrents.forEach((el) => {
-			let li = this.createParentEl(el);
-			fragment.appendChild(li);
+			if(el.id){
+				let li = this.createParentEl(el);
+				fragment.appendChild(li);
+			}
 		});
 		this.parentList.appendChild(fragment);
 	}

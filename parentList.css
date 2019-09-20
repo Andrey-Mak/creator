@@ -29,6 +29,7 @@
 	border: 1px solid #777;
 	background-color: #eee;
 	padding: 20px;
+	user-select: none;
 }
 #DOMTree > ul{
 	padding-left: 0.5em;
@@ -41,12 +42,12 @@
 	padding: 0.2em 0.5em;
 	color: #777;
 }
-#DOMTree .child-el.active,
+#DOMTree .child-el.target,
 #DOMTree .child-el:hover{
 	font-size: 1.1em;
 	color: #000;
 }
-#DOMTree .child-el.active ul,
+#DOMTree .child-el.target ul,
 #DOMTree .child-el:hover ul{
 	display: block;
 }

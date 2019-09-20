@@ -5,13 +5,14 @@ import server from './server.js';
 export default class iElement {
 	constructor(el) {
 		this.el = el;
-		this.node_el = document.querySelector(`#node_${this.el.id}`);
+		this.tree_el = document.querySelector(`#tree_${this.el.id}`);
 		this.elStyles = this.el.getBoundingClientRect();
 		this.isDrug = false;
 		this.isPositioned = false;
 		this.addId();
 		this.el.classList.add("target");
-		this.node_el.classList.add("active");
+		console.log("this.tree_el: ", this.tree_el);
+		this.tree_el.classList.add("target");
 		this.addListeners();
 	}
 
@@ -50,7 +51,6 @@ export default class iElement {
 		this.el.style.left = `${ e.x - this.startX }px`;
 		this.diffY = e.y - this.startY - this.elStyles.top;
 		this.diffX = e.x - this.startX - this.elStyles.left;
-
 	}
 
 	setPosition(e) {
@@ -68,7 +68,7 @@ export default class iElement {
 		document.onmousemove = null;
 		this.el.onmouseup = null;
 		this.el.classList.remove("target");
-		this.node_el.classList.remove("active");
+		this.tree_el.classList.remove("target");
 	}
 	addListeners() {
 		this.el.onmousedown = (e)=>{

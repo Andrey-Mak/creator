@@ -33,7 +33,7 @@ function getCSSStyle(data){
 	return css;
 }
 function saveData(data){
-	fs.writeFileSync('../data.css', getCSSStyle(data));
+	fs.writeFileSync('../data.css', data);
 }
 console.log("Start server");
 

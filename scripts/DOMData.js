@@ -3,18 +3,20 @@ import constants from './constants.js';
 let currentEl;
 function createChildrensList(el, target){
 	let children;
-	if (!target && !constants.elData[el.id]) {
+	if (!target && el.id && !constants.elData[el.id]) {
 		constants.elData[el.id] = {};
 		target = constants.elData[el.id];
 	}
-	if(el && el.children){
+	if(el && el.id && el.children){
 		children = Array.from(el.children);
 	}
-	if (children && children.length > 0) {
+	if(el.id && children && children.length > 0) {
 		target.childrens = {};
 		children.forEach((child) => {
-			target.childrens[child.id] = {};
-			createChildrensList(child, target.childrens[child.id]);
+			if(child.id){
+				target.childrens[child.id] = {};
+				createChildrensList(child, target.childrens[child.id]);
+			}
 		});
 	}
 }
@@ -26,7 +28,7 @@ function findElObj(el, position = constants.elData[constants.generalId].children
 		for(let i = 0; keys.length > i; i++){
 			if(keys[i] !== el.id && position[keys[i]].childrens){
 				findElObj(el, position[keys[i]].childrens, path + keys[i] + "/")
-			}else if(keys[i] === el.id){
+			}else if(el.id && keys[i] === el.id){
 				currentObj = position[keys[i]];
 				currentEl = currentObj;
 				break
