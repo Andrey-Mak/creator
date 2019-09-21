@@ -33,17 +33,26 @@ export default class ParentList {
 			});
 		}
 	}
-	drugElement(el){
+	removeDruggable(el){
+		el.onmousedown = null;
+		this.treeElement.onmousemove = null;
+		this.treeElement.onmouseup = null;
+	}
+	addDruggable(el){
 		el.onmousedown = (e)=>{
-			this.elComputedStyle = getComputedStyle(el);
-			this.elComputedStyleTop = parseInt(this.elComputedStyle.top);
-			this.elComputedStyleLeft = parseInt(this.elComputedStyle.left);
+			e.stopPropagation();
+			clearTimeout(this.timer);
+			this.timer = setTimeout(()=>{
+				this.elComputedStyle = getComputedStyle(el);
+				this.elComputedStyleTop = parseInt(this.elComputedStyle.top);
+				this.elComputedStyleLeft = parseInt(this.elComputedStyle.left);
 
-			this.elStyles = el.getBoundingClientRect();
-			this.startX = parseInt(e.offsetX);
-			this.startY = parseInt(e.offsetY);
+				this.elStyles = el.getBoundingClientRect();
+				this.startX = parseInt(e.offsetX);
+				this.startY = parseInt(e.offsetY);
 
-			this.isDrug = true;
+				this.isDrug = true;
+			}, 500);
 		};
 		this.treeElement.onmousemove = (e)=>{
 			if(this.isDrug){
@@ -56,17 +65,20 @@ export default class ParentList {
 			}
 		};
 		this.treeElement.onmouseup = (e)=>{
-			this.isDrug = false;
-			let realEl = mainEl.querySelector(`#${el.id.replace("tree_", "")}`);
-			let realElTarget = mainEl.querySelector(`#${this.targetNode.id.replace("tree_", "")}`);
-			if(realEl && realElTarget){
-				this.targetNode.appendChild(el);
-				realElTarget.appendChild(realEl);
+			if(this.isDrug){
+				let realEl = mainEl.querySelector(`#${el.id.replace("tree_", "")}`);
+				let realElTarget = mainEl.querySelector(`#${this.targetNode.id.replace("tree_", "")}`);
+				if(realEl && realElTarget){
+					this.targetNode.appendChild(el);
+					realElTarget.appendChild(realEl);
+				}
+				el.style.pointerEvents = 'auto';
+				el.style.position = 'relative';
+				el.style.top = "0";
+				el.style.left = "0";
 			}
-			el.style.pointerEvents = 'auto';
-			el.style.position = 'relative';
-			el.style.top = "0";
-			el.style.left = "0";
+			this.isDrug = false;
+			clearTimeout(this.timer);
 		}
 	}
 	addInteractive(el, shadowEl){
@@ -76,9 +88,13 @@ export default class ParentList {
 			if(this.isDrug){
 				this.targetNode = e.target;
 				console.log("target-node", e.target);
+			}else{
+				this.addDruggable(e.target);
 			}
 		};
 		el.onmouseout = () => {
+			clearTimeout(this.timer);
+			this.targetNode = null;
 			shadowElement.classList.remove("over");
 		};
 		el.onclick = (e) => {
@@ -86,7 +102,6 @@ export default class ParentList {
 			mainEl.dispatchEvent(new CustomEvent("selectEl", {
 				detail: { el: shadowElement }
 			}));
-			this.drugElement(el);
 		};
 	}
 	destroy(){

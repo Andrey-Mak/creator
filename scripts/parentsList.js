@@ -30,7 +30,8 @@ export default class ParentList {
 		parentEl.onmouseout = ()=>{
 			el.classList.remove('selected');
 		};
-		parentEl.onclick = ()=>{
+		parentEl.onclick = (e)=>{
+			e.stopPropagation();
 			let currentEl = el;
 			currentEl.classList.remove('selected');
 			mainEl.dispatchEvent(new CustomEvent("selectEl", {

@@ -5,6 +5,10 @@ import server from './server.js';
 export default class iElement {
 	constructor(el) {
 		this.el = el;
+		this.init();
+	}
+
+	init() {
 		this.tree_el = document.querySelector(`#tree_${this.el.id}`);
 		this.elStyles = this.el.getBoundingClientRect();
 		this.isDrug = false;
@@ -13,11 +17,21 @@ export default class iElement {
 		this.el.classList.add("target");
 		console.log("this.tree_el: ", this.tree_el);
 		this.tree_el.classList.add("target");
+		this.removeClassFromAll("parent-of-target");
+		this.updateParents(this.tree_el.parentElement);
 		this.addListeners();
 	}
 
-	addContextMenu(name) {
-		this.className = name;
+	removeClassFromAll(className){
+		Array.prototype.slice.call(document.querySelectorAll(`.${className}`)).forEach((el)=>{
+			el.classList.remove(className);
+		})
+	}
+	updateParents(parent) {
+		if(parent && parent.classList.contains("child-el")){
+			parent.classList.add("parent-of-target");
+			this.updateParents(parent.parentElement)
+		}
 	}
 
 	addId() {
@@ -43,7 +57,7 @@ export default class iElement {
 		this.label = label;
 	}
 
-	updatePosition(e) {
+	tempPosition(e) {
 		this.el.style.position = 'fixed';
 		this.el.style.zIndex = '99';
 
@@ -85,7 +99,7 @@ export default class iElement {
 		};
 		document.onmousemove = (e)=>{
 			if(this.isDrug){
-				this.updatePosition(e);
+				this.tempPosition(e);
 				this.isPositioned = false;
 			}
 		};

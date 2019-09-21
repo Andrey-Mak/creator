@@ -22,8 +22,18 @@ try{
 		if(targetEl){
 			targetEl.removeListeners();
 		}
-		let parentList = new ParentsList(e.path, e.x, e.y);
-		parentLists.push(parentList);
+		console.log("dblclick", e);
+		if(e.target.id && e.target.id !== constants.generalId){
+			let parentList = new ParentsList(e.path, e.x, e.y);
+			parentLists.push(parentList);
+		}
+
+	});
+	mainEl.addEventListener("click", (e)=>{
+		if(parentLists.length > 0){
+			parentLists[0].destroy();
+			parentLists = [];
+		}
 	});
 	mainEl.addEventListener("selectEl", (e)=>{
 		console.log(e);
