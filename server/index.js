@@ -2,42 +2,54 @@ const WebSocket = require("ws");
 const fs = require('fs');
 const cheerio = require('cheerio');
 
-fs.readFile('../index.html', 'utf8', function read(err, data) {
-	if (err) throw err;
-	updateHTML(data);
-});
-
 function updateHTML(HTML){
 	const $ = cheerio.load(HTML);
 	console.log($('#creator').html());
 }
 
-
 const server = new WebSocket.Server({ port: 3000 });
-function getCSSStyle(data){
-	let css = "";
-	let styles = JSON.parse(data);
-	Object.keys(styles).forEach((key)=>{
-		let propertys = styles[key].styles;
+let css = "";
+let oldData = "";
+function getElementsStyle(elements){
+	Object.keys(elements).forEach((key)=>{
+		let propertys = elements[key].styles;
+		let children = elements[key].childrens;
 		if(propertys && Object.keys(propertys).length){
 			css += `
-		#${key} {`;
+	#${key} {`;
 			Object.keys(propertys).forEach((property)=>{
 				css += `
-			${property}: ${propertys[property]};`;
+		${property}: ${propertys[property]};`;
 			});
 			css += `
-			}`;
+		}`;
+		}
+		if(children){
+			getElementsStyle(children);
 		}
 	});
-	return css;
 }
+
+fs.readFile('../index.html', 'utf8', function read(err, data) {
+	if (err) throw err;
+	updateHTML(data);
+});
+
+fs.readFile('./data.txt', 'utf8', function read(err, data) {
+	if (err) throw err;
+	oldData = JSON.parse(data);
+});
+
 function saveData(data){
-	fs.writeFileSync('../data.css', data);
+	getElementsStyle(JSON.parse(data));
+	fs.writeFileSync('../data.css', css);
+	fs.writeFileSync('./data.txt', JSON.stringify(data));
+	css = "";
 }
 console.log("Start server");
 
 server.on("connection", (ws) => {
+	ws.send(oldData);
 	ws.on("message", (message)=> {
 		console.log(message);
 		server.clients.forEach((client)=>{

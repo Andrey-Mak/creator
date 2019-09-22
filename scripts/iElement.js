@@ -13,13 +13,14 @@ export default class iElement {
 		this.elStyles = this.el.getBoundingClientRect();
 		this.isDrug = false;
 		this.isPositioned = false;
-		this.addId();
+	//	this.addId();
 		this.el.classList.add("target");
-		console.log("this.tree_el: ", this.tree_el);
+		constants.mainEl.classList.add("editing");
 		this.tree_el.classList.add("target");
 		this.removeClassFromAll("parent-of-target");
 		this.updateParents(this.tree_el.parentElement);
 		this.addListeners();
+		this.addScale();
 	}
 
 	removeClassFromAll(className){
@@ -49,13 +50,6 @@ export default class iElement {
 			server.sendData(constants.elData);
 		}
 	}
-	removeClass(name) {
-		this.className = name;
-	}
-
-	setLabel(label) {
-		this.label = label;
-	}
 
 	tempPosition(e) {
 		this.el.style.position = 'fixed';
@@ -83,6 +77,11 @@ export default class iElement {
 		this.el.onmouseup = null;
 		this.el.classList.remove("target");
 		this.tree_el.classList.remove("target");
+		constants.mainEl.classList.remove("editing");
+		if(this.scale){
+			this.scale.remove();
+			this.scale = null;
+		}
 	}
 	addListeners() {
 		this.el.onmousedown = (e)=>{
@@ -110,6 +109,11 @@ export default class iElement {
 				this.setPosition(e);
 			}
 		}
+	}
+	addScale(){
+		this.scale = document.createElement("div");
+		this.scale.className = "element-scale";
+		this.el.appendChild(this.scale);
 	}
 	toCamelCase(text) {
 		return text.replace(/^([A-Z])|[\s-_](\w)/g, function(match, p1, p2, offset) {
