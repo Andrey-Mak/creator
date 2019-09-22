@@ -37,19 +37,19 @@ fs.readFile('../index.html', 'utf8', function read(err, data) {
 
 fs.readFile('./data.txt', 'utf8', function read(err, data) {
 	if (err) throw err;
-	oldData = JSON.parse(data);
+	oldData = JSON.parse(data) || "{}";
 });
 
 function saveData(data){
 	getElementsStyle(JSON.parse(data));
-	fs.writeFileSync('../data.css', css);
-	fs.writeFileSync('./data.txt', JSON.stringify(data));
+	fs.writeFileSync('../data.css', css || "");
+	fs.writeFileSync('./data.txt', JSON.stringify(data) || "{}");
 	css = "";
 }
 console.log("Start server");
 
 server.on("connection", (ws) => {
-	ws.send(oldData);
+	ws.send(JSON.stringify(oldData));
 	ws.on("message", (message)=> {
 		console.log(message);
 		server.clients.forEach((client)=>{

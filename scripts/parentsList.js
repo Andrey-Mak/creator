@@ -23,7 +23,7 @@ export default class ParentList {
 	createParentEl(el){
 		let parentEl = document.createElement("li");
 		parentEl.className = "parent-node";
-		parentEl.innerHTML = `${el.tagName}#${el.id}.${el.className}`;
+		parentEl.innerHTML = `${el.id}`;
 		parentEl.onmouseover = ()=>{
 			el.classList.add('selected');
 		};

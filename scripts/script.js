@@ -14,6 +14,7 @@ async function startCreator(){
 		server.onopen();
 		let serverData = server.onmessage();
 		constants.elData = serverData || {};
+		mainEl.firstElementChild.id = "wrapper";
 		DOMData.init(mainEl);
 		let tree = new DOMTree();
 
@@ -26,8 +27,12 @@ async function startCreator(){
 				targetEl.removeListeners();
 			}
 			console.log("dblclick", e);
-			if(e.target.id && e.target.id !== constants.generalId){
-				let parentList = new ParentsList(e.path, e.x, e.y);
+			console.log("dblclick", e.path);
+			
+			let targetPath = e.path.filter((el) => el.id && el.id !== "wrapper");
+			console.log("firstId", targetPath);
+			if(targetPath && targetPath[0] !== constants.generalId){
+				let parentList = new ParentsList(targetPath, e.x, e.y);
 				parentLists.push(parentList);
 			}
 
@@ -49,4 +54,6 @@ async function startCreator(){
 		console.warn(err);
 	}
 }
-window.onload = startCreator();
+window.onload = setTimeout(()=>{
+	startCreator();
+}, 300);
